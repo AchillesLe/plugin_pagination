@@ -28,12 +28,9 @@
 				let current_class = "current";
 				let next_class = "next";
 				let disabled_class = "disabled";
-				let pagination = '<ul class="pagination js_pagination">';
+				let pagination = '<ul class="pagination js_pagination" id="pagination_ul">';
 				if( total==0 ){
-					pagination = `<ul class="pagination js_pagination">
-						<li><a class="previous disabled">前</a></li>
-						<li><a class="next disabled">次</a></li>
-					</ul>`;
+					pagination = '';
 				}else{
 					pagination +='<li ><a class="' + previous_class + ' ';
 					pagination += current == 1 ? disabled_class : "" ;
@@ -48,9 +45,9 @@
 					pagination += current == total_page ? disabled_class : "" ;
 					pagination += '" >次</a></li>';
 				}	
-			selector.parent().find('ul.pagination.js_pagination').remove();
+			selector.parent().find('ul#pagination_ul').remove();
 			selector.after(pagination);
-			this.pagination = $('ul.pagination.js_pagination');
+			this.pagination = $('ul#pagination_ul');
 		}
 
 		function init_display(){
@@ -66,7 +63,7 @@
 		}
 
 		function move_page(to_page){
-			let keyword = search.val().toUpperCase();
+			let keyword = search.length > 0 ? search.val().toUpperCase() : '';
 			let total = 0;
 			let total_list = [];
 		
@@ -103,18 +100,18 @@
 			move_page(current_page-1);
 		}
 
-		$(document).on('click','.pagination.js_pagination li a:not(.next):not(.previous):not(.current)',function(){
+		$(document).on('click','ul#pagination_ul li a:not(.next):not(.previous):not(.current)',function(){
 			let x =  $(this).parent('li').data('page_id');
 			move_page(x);
 		});
-		$(document).on('click','.pagination.js_pagination li a.next',function(){
+		$(document).on('click','ul#pagination_ul li a.next',function(){
 			next_page();
 		});
-		$(document).on('click','.pagination.js_pagination li a.previous',function(){
+		$(document).on('click','ul#pagination_ul li a.previous',function(){
 			previous_page();
 		});
 		search.on('input',function(){
-			let keyword = $(this).val().toUpperCase();
+			let keyword = $(this).length > 0 ? $(this).val().toUpperCase() : '';
 			let total = 0;
 			let show = 0;
 			if(keyword.length == 0){
